@@ -24,14 +24,8 @@ describe("elements", () => {
       cy.get("#output").should("exist");
       cy.get("#name").should("exist").contains("John Doe");
       cy.get("#email").should("exist").contains("jd@noon.com");
-      //cy.get("p")
-      //.find("#currentAddress")
-      //.should("exist")
-      //.contains("123, Bahamas");
-      //cy.get("p").within(() => cy.get("currentAddress"));
-      //cy.get("p > #currentAddress").should("exist").contains("123, Bahamas");
-      cy.get("p > #currentAddress > .mb-1").should("exist");
-      //cy.get("p > #permanentAddress > .mb-1").should("exist"); //.contains("234, Home");
+      cy.get("#currentAddress.mb-1").should("exist").contains("123, Bahamas");
+      cy.get("#permanentAddress.mb-1").should("exist").contains("234, Home");
     });
 
     it("rejects invalid email", () => {});
@@ -39,12 +33,13 @@ describe("elements", () => {
 
   context("check box", () => {
     it("select check box", () => {
-      //read about specifying pathnames
       cy.get("#item-1").click();
       cy.location("pathname").should("eq", "/checkbox");
       cy.get("button.rct-collapse.rct-collapse-btn").click();
-      //read about using .check()
-      cy.get("svg.rct-icon.rct-icon-uncheck").eq(1).click();
+      cy.get('[type="checkbox"]')
+        .eq(1)
+        .check({ force: true })
+        .should("be.checked");
       cy.get("#result").should("exist");
     });
   });
@@ -53,7 +48,10 @@ describe("elements", () => {
     it("select radio button", () => {
       cy.get("#item-2").click();
       cy.location("pathname").should("eq", "/radio-button");
-      cy.get("label").eq(1).click();
+      cy.get('[type="radio"]')
+        .eq(0)
+        .check({ force: true })
+        .should("be.checked");
       cy.get("p.mt-3").should("exist");
     });
   });
@@ -134,11 +132,8 @@ describe("elements", () => {
     it("uploading a file", () => {
       cy.get("#item-7").click();
       cy.location("pathname").should("eq", "/upload-download");
-      cy.get("input#uploadFile.form-control-file").click().selectFile(
-        "downloads/simpleFile.jpeg"
-
-        //cy.get("input#uploadFile.form-control-file").selectFile("downloads/simpleFile.jpeg"
-      );
+      cy.get("input#uploadFile[type='file']").attachFile("sampleFile");
+      cy.get("#uploadedFilePath").should("exist");
     });
   });
 });
@@ -151,13 +146,15 @@ describe("alerts, frames and windows", () => {
   });
 
   context("browser windows", () => {
-    it.only("opens a new tab", () => {
+    it("opens a new tab", () => {
       //cy.get("li#item-0");
       cy.get(":nth-child(3) > .element-list > .menu-list > #item-0").click();
       //cy.get("li#item-0.btn.btn-light.active"); //.click();
       cy.location("pathname").should("eq", "/browser-windows");
       cy.get("#tabButton").click();
-      //cy.location("href").should("eq", "/sample");
+      cy.location("pathname").should("eq", "https://demoqa.com-48");
+      //cy.log(cy.location("pathname"));
+      //new window assertion
     });
 
     it("opens a new window", () => {
@@ -176,24 +173,40 @@ describe("alerts, frames and windows", () => {
   });
 
   context("alerts", () => {
-    it("opens alert windows", () => {
+    it.only("opens alert windows", () => {
       cy.get(":nth-child(3) > .element-list > .menu-list > #item-1").click();
       cy.location("pathname").should("eq", "/alerts");
       cy.get("#alertButton").click();
-      //window assertion
+      cy.on("window", (text) => {
+        expect(text).to.equal("You clicked a button");
+      });
       cy.get("#timerAlertButton").click();
-      //delayed window assertion
+      cy.on("window", (text) => {
+        expect(text).to.equal("This alert appeared after 5 seconds");
+      });
       cy.get("#confirmButton").click();
-      //confirm box assertion
-      //cy.get('confirmResult').should('exist')
+      cy.on("window:confirm", (text) => {
+        expect(text).to.equal("Do you confirm action?");
+        return false;
+      });
+      cy.get("span#confirmResult.text-success").should(
+        "have.text",
+        "You selected Cancel"
+      );
       cy.get("#promtButton").click();
-      //text prompt assertion
       //cy.get('promptResult').should('exist')
+      cy.window().then((prompt) => {
+        cy.stub(prompt, "Please enter your name").returns("saymyname");
+      });
+      cy.get("span#confirmResult.text-success").should(
+        "have.text",
+        "You entered saymyname"
+      );
     });
   });
 
   context("frames", () => {
-    it("checks iframe content", () => {
+    it("checks large iframe content", () => {
       cy.get(":nth-child(3) > .element-list > .menu-list > #item-2").click();
       cy.location("pathname").should("eq", "/frames");
       cy.iframe("iframe#frame1")
@@ -201,15 +214,13 @@ describe("alerts, frames and windows", () => {
         .contains("This is a sample page");
     });
 
-    it("", () => {
+    it("checks small iframe content", () => {
       cy.get(":nth-child(3) > .element-list > .menu-list > #item-2").click();
       cy.location("pathname").should("eq", "/frames");
-      cy.get("#frame2Wrapper").find("#frame2");
-      //.within(() => {
-      //cy.get("body#sampleHeading");
-      //cy.get("body");
-      //});
-      //.contains("This is a sample page");
+      cy.get("#frame2Wrapper")
+        .iframe("#frame2")
+        .find("h1#sampleHeading")
+        .contains("This is a sample page");
     });
   });
 
@@ -217,13 +228,11 @@ describe("alerts, frames and windows", () => {
     it("checks for contents of nested iframes", () => {
       cy.get(":nth-child(3) > .element-list > .menu-list > #item-3").click();
       cy.location("pathname").should("eq", "/nestedframes");
-      cy.iframe("iframe#frame1").within(() => {
-        //cy.find("body").should("have.text", "Parent frame");
-        cy.iframe("iframe").should("have.attr", "srcdoc", "Child Iframe");
-        //.click();
-        cy.iframe("iframe > p");
-      }); //.find("body"); //.contains("Parent frame");
-      ///cy.iframe()//.find().contains('Child Iframe')
+      cy.iframe("iframe#frame1")
+        .contains("Parent frame")
+        .within(() => {
+          cy.iframe("iframe").contains("Child Iframe");
+        });
     });
   });
 
