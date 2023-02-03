@@ -69,6 +69,11 @@ describe("elements", () => {
       cy.get("#salary").type("23456");
       cy.get("#department").type("Safety");
       cy.get("#submit").should("exist").click();
+      cy.get(".rt-table")
+        .find(".rt-tbody")
+        .within(() => {
+          cy.get(".rt-tr-group").contains("john@john.com");
+        });
 
       //find a way to assert that data has been saved and added
 
@@ -127,6 +132,8 @@ describe("elements", () => {
       cy.get("#item-7").click();
       cy.location("pathname").should("eq", "/upload-download");
       cy.get("#downloadButton").click();
+      //cy.downloadFile("", "cypress/downloads", "sampleFileUrlApproach.jpeg");
+      cy.readFile("cypress/downloads/sampleFile.jpeg");
     });
 
     it("uploading a file", () => {
@@ -134,127 +141,6 @@ describe("elements", () => {
       cy.location("pathname").should("eq", "/upload-download");
       cy.get("input#uploadFile[type='file']").attachFile("sampleFile");
       cy.get("#uploadedFilePath").should("exist");
-    });
-  });
-});
-
-describe("alerts, frames and windows", () => {
-  beforeEach(() => {
-    cy.visit("https://demoqa.com/");
-    cy.get("div.card.mt-4.top-card").eq(2).click();
-    cy.location("pathname").should("eq", "/alertsWindows");
-  });
-
-  context("browser windows", () => {
-    it("opens a new tab", () => {
-      //cy.get("li#item-0");
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-0").click();
-      //cy.get("li#item-0.btn.btn-light.active"); //.click();
-      cy.location("pathname").should("eq", "/browser-windows");
-      cy.get("#tabButton").click();
-      cy.location("pathname").should("eq", "https://demoqa.com-48");
-      //cy.log(cy.location("pathname"));
-      //new window assertion
-    });
-
-    it("opens a new window", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-0").click();
-      cy.location("pathname").should("eq", "/browser-windows");
-      cy.get("#windowButton").click();
-      //new window assertion
-    });
-
-    it("new window with a message", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-0").click();
-      cy.location("pathname").should("eq", "/browser-windows");
-      cy.get("#messageWindowButton").click();
-      //new window assertion
-    });
-  });
-
-  context("alerts", () => {
-    it.only("opens alert windows", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-1").click();
-      cy.location("pathname").should("eq", "/alerts");
-      cy.get("#alertButton").click();
-      cy.on("window", (text) => {
-        expect(text).to.equal("You clicked a button");
-      });
-      cy.get("#timerAlertButton").click();
-      cy.on("window", (text) => {
-        expect(text).to.equal("This alert appeared after 5 seconds");
-      });
-      cy.get("#confirmButton").click();
-      cy.on("window:confirm", (text) => {
-        expect(text).to.equal("Do you confirm action?");
-        return false;
-      });
-      cy.get("span#confirmResult.text-success").should(
-        "have.text",
-        "You selected Cancel"
-      );
-      cy.get("#promtButton").click();
-      //cy.get('promptResult').should('exist')
-      cy.window().then((prompt) => {
-        cy.stub(prompt, "Please enter your name").returns("saymyname");
-      });
-      cy.get("span#confirmResult.text-success").should(
-        "have.text",
-        "You entered saymyname"
-      );
-    });
-  });
-
-  context("frames", () => {
-    it("checks large iframe content", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-2").click();
-      cy.location("pathname").should("eq", "/frames");
-      cy.iframe("iframe#frame1")
-        .find("h1#sampleHeading")
-        .contains("This is a sample page");
-    });
-
-    it("checks small iframe content", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-2").click();
-      cy.location("pathname").should("eq", "/frames");
-      cy.get("#frame2Wrapper")
-        .iframe("#frame2")
-        .find("h1#sampleHeading")
-        .contains("This is a sample page");
-    });
-  });
-
-  context("nested frames", () => {
-    it("checks for contents of nested iframes", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-3").click();
-      cy.location("pathname").should("eq", "/nestedframes");
-      cy.iframe("iframe#frame1")
-        .contains("Parent frame")
-        .within(() => {
-          cy.iframe("iframe").contains("Child Iframe");
-        });
-    });
-  });
-
-  context("modal dialogs", () => {
-    it("checks for modal content", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-4").click();
-      cy.location("pathname").should("eq", "/modal-dialogs");
-      cy.get("#showSmallModal").click();
-      cy.get(".modal-header").contains("Small Modal");
-      cy.get(".modal-body").should(
-        "have.text",
-        "This is a small modal. It has very less content"
-      );
-      cy.get(".modal-footer").find("#closeSmallModal").click();
-      cy.location("pathname").should("eq", "/modal-dialogs");
-      cy.get("#showLargeModal").click();
-      cy.get(".modal-header").contains("Large Modal");
-      cy.get(".modal-body").contains(
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-      );
-      cy.get(".modal-footer").find("#closeLargeModal").click();
-      cy.location("pathname").should("eq", "/modal-dialogs");
     });
   });
 });
