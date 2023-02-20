@@ -1,11 +1,37 @@
 import "cy-iframe";
 import "cypress-file-upload";
 
-//require("cypress-downloadfile/lib/downloadFileCommand");
+const textGenerator = () => {
+  const randomtext = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const textlength = Math.floor(Math.random() * 10);
+  let text = "";
+  while (textlength >= 1 && text.length < textlength) {
+    text += randomtext[Math.floor(Math.random() * randomtext.length)];
+  }
+  return text;
+};
 
-Cypress.on("uncaught:exception", (err, runnable) => {
-  // returning false here prevents Cypress from
-  // failing the test
-  console.log("something went wrong", err);
-  return false;
+Cypress.Commands.add("randomTextGenerator", (selector) => {
+  let randomString = textGenerator();
+  cy.get(selector).type(randomString);
+});
+
+Cypress.Commands.add("randomFullNameGenerator", (selector) => {
+  let randomFullName = `${textGenerator()} ${textGenerator()}`;
+  cy.get(selector).type(randomFullName);
+});
+
+Cypress.Commands.add("randomEmailGenerator", (selector) => {
+  let randomEmail = `${textGenerator()}@mail.com`;
+  cy.get(selector).type(randomEmail);
+});
+
+Cypress.Commands.add("randomAddressGenerator", (selector) => {
+  let randomAddress = `${Math.floor(Math.random() * 500)}, ${textGenerator()}`;
+  cy.get(selector).type(randomAddress);
+});
+
+Cypress.Commands.add("randomNumberGenerator", (selector) => {
+  let randomNumber = Math.floor(Math.random() * 100);
+  cy.get(selector).type(randomNumber);
 });
