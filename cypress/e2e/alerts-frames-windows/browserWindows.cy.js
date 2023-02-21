@@ -1,14 +1,14 @@
 describe("browser windows", () => {
   beforeEach(() => {
-    cy.visit("https://demoqa.com/");
+    cy.visit("/");
     cy.get("div.card.mt-4.top-card").eq(2).click();
     cy.location("pathname").should("eq", "/alertsWindows");
+    cy.get("li#item-0.btn.btn-light").eq(2).click();
+    cy.location("pathname").should("eq", "/browser-windows");
   });
 
   context("windows", () => {
     it("opens a new tab", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-0").click();
-      cy.location("pathname").should("eq", "/browser-windows");
       cy.visit("https://demoqa.com/browser-windows");
       cy.get("#tabButton")
         .click()
@@ -19,8 +19,6 @@ describe("browser windows", () => {
     });
 
     it("opens a new window", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-0").click();
-      cy.location("pathname").should("eq", "/browser-windows");
       cy.get("#windowButton")
         .click()
         .then(() => {
@@ -31,8 +29,6 @@ describe("browser windows", () => {
     });
 
     it("new window with a message", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-0").click();
-      cy.location("pathname").should("eq", "/browser-windows");
       cy.get("#messageWindowButton").click();
 
       cy.wait(3000);

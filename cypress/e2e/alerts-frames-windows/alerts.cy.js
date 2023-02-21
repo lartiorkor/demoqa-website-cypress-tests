@@ -1,13 +1,13 @@
 describe("alerts", () => {
   beforeEach(() => {
-    cy.visit("https://demoqa.com/");
+    cy.visit("/");
     cy.get("div.card.mt-4.top-card").eq(2).click();
     cy.location("pathname").should("eq", "/alertsWindows");
   });
 
   context("opens alert windows", () => {
     it.only("opens alert windows", () => {
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-1").click();
+      cy.get("li#item-1.btn.btn-light").eq(1).click();
       cy.location("pathname").should("eq", "/alerts");
       cy.get("#alertButton").click();
       cy.on("window", (text) => {
@@ -26,8 +26,6 @@ describe("alerts", () => {
         "have.text",
         "You selected Cancel"
       );
-      cy.get(":nth-child(3) > .element-list > .menu-list > #item-1").click();
-      cy.location("pathname").should("eq", "/alerts");
       cy.get("#alertButton").click();
       cy.window().then((window) => {
         cy.stub(window, "prompt").returns("saymyname");

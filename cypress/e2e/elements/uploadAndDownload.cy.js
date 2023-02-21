@@ -1,6 +1,6 @@
 describe("upload and download", () => {
   beforeEach(() => {
-    cy.visit("https://demoqa.com/");
+    cy.visit("/");
     cy.get("div.card.mt-4.top-card").eq(0).click();
     cy.location("pathname").should("eq", "/elements");
   });

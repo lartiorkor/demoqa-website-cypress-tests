@@ -3,9 +3,9 @@ import "cypress-file-upload";
 
 const textGenerator = () => {
   const randomtext = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  const textlength = Math.floor(Math.random() * 10);
+  const textlength = Math.ceil(Math.random() * 10);
   let text = "";
-  while (textlength >= 1 && text.length < textlength) {
+  while (text.length < textlength) {
     text += randomtext[Math.floor(Math.random() * randomtext.length)];
   }
   return text;

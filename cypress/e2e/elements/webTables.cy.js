@@ -1,6 +1,6 @@
-describe("", () => {
+describe("tables", () => {
   beforeEach(() => {
-    cy.visit("https://demoqa.com/");
+    cy.visit("/");
     cy.get("div.card.mt-4.top-card").eq(0).click();
     cy.location("pathname").should("eq", "/elements");
   });
@@ -18,14 +18,6 @@ describe("", () => {
       cy.randomNumberGenerator("#salary");
       cy.randomTextGenerator("#department");
       cy.get("#submit").should("exist").click();
-      /**
-       * cy.get(".rt-table")
-        .find(".rt-tbody")
-        .within(() => {
-          cy.get(".rt-tr-group").contains("john@john.com");
-        });
-       */
-      //find a way to assert that data has been saved and added
     });
   });
 });
