@@ -1,8 +1,8 @@
 name: Demoqa job schedule
-on: 
-  push
+on:
+  # push
   schedule:
-    -cron: '* * * * 5'
+    - cron: "30 11 9 * 4"
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
           start: npm start
-          wait-on: 'http://localhost:3000' # Waits for above
+          wait-on: "http://localhost:3000" # Waits for above
           # Records to Cypress Cloud
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
