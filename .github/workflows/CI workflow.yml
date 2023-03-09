@@ -1,0 +1,22 @@
+name: Demoqa job schedule
+
+on: [push]
+  schedule:
+    -cron: "* * * * 5"
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@V2
+
+      - name: Cypress run
+        uses: cypress-io/githubaction@V2
+        with:
+          build: npm run build
+          start: npm start
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{}}
+          GITHUB_TOKEN: ${{}}
