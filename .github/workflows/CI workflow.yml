@@ -2,7 +2,7 @@ name: Demoqa job schedule
 on:
   # push
   schedule:
-    - cron: "30 11 9 * 4"
+    - cron: "33 11 9 3 4"
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
