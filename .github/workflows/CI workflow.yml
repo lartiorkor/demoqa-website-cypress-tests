@@ -1,5 +1,5 @@
 name: Demoqa job schedule
-on: [push]
+on: push
   schedule:
     -cron: "* * * * 5"
 jobs:
