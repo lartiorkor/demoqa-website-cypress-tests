@@ -1,10 +1,6 @@
 describe("alerts", () => {
   beforeEach(() => {
-    cy.visit("/");
-    cy.get("div.card.mt-4.top-card").eq(2).click();
-    cy.location("pathname").should("eq", "/alertsWindows");
-    cy.get("li#item-1.btn.btn-light").eq(1).click();
-    cy.location("pathname").should("eq", "/alerts");
+    cy.visit("/alerts");
   });
 
   context("alerts, confirm windows and prompts", () => {

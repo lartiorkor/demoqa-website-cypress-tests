@@ -1,14 +1,7 @@
 describe("modal dialogs", () => {
-  beforeEach(() => {
-    cy.visit("/");
-    cy.get("div.card.mt-4.top-card").eq(2).click();
-    cy.location("pathname").should("eq", "/alertsWindows");
-  });
-
   context("modal dialogs", () => {
     it("checks for modal content", () => {
-      cy.get("li#item-4").eq(1).click();
-      cy.location("pathname").should("eq", "/modal-dialogs");
+      cy.visit("/modal-dialogs");
       cy.get("#showSmallModal").click();
       cy.get(".modal-header").contains("Small Modal");
       cy.get(".modal-body").should(

@@ -1,10 +1,6 @@
 describe("browser windows", () => {
   beforeEach(() => {
-    cy.visit("/");
-    cy.get("div.card.mt-4.top-card").eq(2).click();
-    cy.location("pathname").should("eq", "/alertsWindows");
-    cy.get("li#item-0.btn.btn-light").eq(2).click();
-    cy.location("pathname").should("eq", "/browser-windows");
+    cy.visit("/browser-windows");
   });
 
   context("windows", () => {

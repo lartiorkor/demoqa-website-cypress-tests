@@ -1,13 +1,10 @@
 describe("text box", () => {
   beforeEach(() => {
-    cy.visit("/");
-    cy.get("div.card.mt-4.top-card").eq(0).click();
-    cy.location("pathname").should("eq", "/elements");
+    cy.visit("/text-box");
   });
 
   context("user registration", () => {
     it("valid user credentials", () => {
-      cy.get("#item-0").click();
       cy.randomFullNameGenerator("#userName");
       cy.randomEmailGenerator("#userEmail");
       cy.randomAddressGenerator("#currentAddress");
@@ -21,7 +18,6 @@ describe("text box", () => {
     });
 
     it("rejects invalid email", () => {
-      cy.get("#item-0").click();
       cy.randomFullNameGenerator("#userName");
       cy.randomTextGenerator("#userEmail");
       cy.randomAddressGenerator("#currentAddress");

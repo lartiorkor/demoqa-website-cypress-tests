@@ -1,14 +1,7 @@
 describe("radio button", () => {
-  beforeEach(() => {
-    cy.visit("/");
-    cy.get("div.card.mt-4.top-card").eq(0).click();
-    cy.location("pathname").should("eq", "/elements");
-  });
-
   context("select radio button", () => {
     it("select radio button", () => {
-      cy.get("#item-2").click();
-      cy.location("pathname").should("eq", "/radio-button");
+      cy.visit("/radio-button");
       cy.get('[type="radio"]')
         .eq(0)
         .check({ force: true })

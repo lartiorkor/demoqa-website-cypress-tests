@@ -1,14 +1,10 @@
 describe("links", () => {
   beforeEach(() => {
-    cy.visit("/");
-    cy.get("div.card.mt-4.top-card").eq(0).click();
-    cy.location("pathname").should("eq", "/elements");
+    cy.visit("/links");
   });
 
   context("links", () => {
     it("target: blank", () => {
-      cy.get("#item-5").click();
-      cy.location("pathname").should("eq", "/links");
       cy.get("#simpleLink").should("have.attr", "target", "_blank").click();
       cy.get("#dynamicLink").should("have.attr", "target", "_blank").click();
     });
