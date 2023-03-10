@@ -11,7 +11,7 @@ describe("alerts", () => {
       cy.location("pathname").should("eq", "/alerts");
       cy.get("#alertButton").click();
       cy.on("window", (text) => {
-        expect(text).to.equal("something else");
+        expect(text).to.equal("something else"); //You clicked a button
       });
       cy.get("#timerAlertButton").click();
       cy.on("window", (text) => {
@@ -19,7 +19,7 @@ describe("alerts", () => {
       });
       cy.get("#confirmButton").click();
       cy.on("window:confirm", (text) => {
-        expect(text).to.equal("nothing?");
+        expect(text).to.equal("Do you confirm action?");
         return false;
       });
       cy.get("span#confirmResult.text-success").should(
