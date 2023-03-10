@@ -3,20 +3,27 @@ describe("alerts", () => {
     cy.visit("/");
     cy.get("div.card.mt-4.top-card").eq(2).click();
     cy.location("pathname").should("eq", "/alertsWindows");
+    cy.get("li#item-1.btn.btn-light").eq(1).click();
+    cy.location("pathname").should("eq", "/alerts");
   });
 
-  context("opens alert windows", () => {
-    it.only("opens alert windows", () => {
-      cy.get("li#item-1.btn.btn-light").eq(1).click();
-      cy.location("pathname").should("eq", "/alerts");
+  context("alerts, confirm windows and prompts", () => {
+    it("alert window", () => {
       cy.get("#alertButton").click();
-      cy.on("window", (text) => {
-        expect(text).to.equal("something else"); //You clicked a button
+      cy.on("window:alert", (text) => {
+        expect(text).to.equal("You clicked a button");
       });
+    });
+
+    it("delayed alert window", () => {
       cy.get("#timerAlertButton").click();
-      cy.on("window", (text) => {
-        expect(text).to.equal("This alert appeared after 5 seconds");
+      cy.wait(5000);
+      cy.on("window:alert", (text) => {
+        expect(text).eql("This alert appeared after 5 seconds");
       });
+    });
+
+    it("confirm button", () => {
       cy.get("#confirmButton").click();
       cy.on("window:confirm", (text) => {
         expect(text).to.equal("Do you confirm action?");
@@ -26,7 +33,9 @@ describe("alerts", () => {
         "have.text",
         "You selected Cancel"
       );
-      cy.get("#alertButton").click();
+    });
+
+    it("prompt", () => {
       cy.window().then((window) => {
         cy.stub(window, "prompt").returns("saymyname");
       });
